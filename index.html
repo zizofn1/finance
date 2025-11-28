@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fun Design F&Z ERP</title>
+    <link rel="icon" type="image/png" href="public/logo.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -12,37 +13,38 @@
         background-color: #f8fafc;
       }
       @media print {
-        .no-print { display: none !important; }
-        .print-only { display: block !important; }
+        @page { margin: 1cm; size: landscape; }
+        .no-print, header, aside, .toast-container { display: none !important; }
         
-        body, #root, main {
+        body, #root, main, .overflow-hidden, .overflow-auto {
           background-color: white !important;
           margin: 0 !important;
           padding: 0 !important;
           height: auto !important;
-          overflow: visible !important;
-        }
-
-        /* Ensure content takes full width */
-        main {
           width: 100% !important;
-          max-width: none !important;
+          overflow: visible !important;
+          position: static !important;
         }
 
-        /* Improve table readability */
+        /* Ensure tables print fully */
         table {
           width: 100% !important;
           border-collapse: collapse !important;
+          page-break-inside: auto;
         }
+        tr { page-break-inside: avoid; page-break-after: auto; }
         th, td {
           border: 1px solid #ddd !important;
           padding: 8px !important;
+          color: black !important;
         }
         
-        /* Hide scrollbars */
-        ::-webkit-scrollbar {
-          display: none;
-        }
+        /* Text colors fix */
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color: black; }
+        .text-emerald-600, .text-emerald-700 { color: #059669 !important; }
+        .text-red-600, .text-red-700 { color: #dc2626 !important; }
+        .bg-emerald-50 { background-color: #ecfdf5 !important; }
+        .bg-red-50 { background-color: #fef2f2 !important; }
       }
     </style>
   <script type="importmap">
@@ -61,5 +63,6 @@
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
