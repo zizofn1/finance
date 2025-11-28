@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -98,9 +98,8 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
         <div className="text-center mb-10">
            <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30 p-1">
              <div className="w-full h-full bg-slate-900 rounded-2xl flex items-center justify-center overflow-hidden">
-               {/* HNA FORSINA TASGHAR (max-width, max-height) */}
                <img 
-                 src="/logo.png" 
+                 src="public/logo.png" 
                  alt="Logo" 
                  className="object-contain" 
                  style={{ maxWidth: '60px', maxHeight: '60px' }} 
@@ -202,7 +201,7 @@ const App = () => {
 
           {/* --- ULTRA MODERN SIDEBAR --- */}
           <aside 
-            className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0f172a] text-white transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-2xl flex flex-col border-r border-slate-800 ${
+            className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0f172a] text-white transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-2xl flex flex-col border-r border-slate-800 print:hidden ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
@@ -211,9 +210,8 @@ const App = () => {
                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-indigo-900/20 to-transparent pointer-events-none" />
                <div className="flex items-center gap-4 relative z-10">
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1 shadow-lg shadow-indigo-500/20">
-                  {/* HNA TANI FORSINA TASGHAR */}
                   <img 
-                    src="/logo.png" 
+                    src="public/logo.png" 
                     alt="Fun Design" 
                     className="object-contain" 
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
@@ -282,7 +280,7 @@ const App = () => {
           <div className="flex-1 flex flex-col h-full overflow-hidden relative bg-[#f8fafc]">
             
             {/* Top Bar (Glass Effect) */}
-            <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-4 lg:px-8 shadow-sm z-10 sticky top-0">
+            <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-4 lg:px-8 shadow-sm z-10 sticky top-0 print:hidden">
               <div className="flex items-center gap-4">
                 <button 
                   className="lg:hidden text-slate-600 p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -308,7 +306,7 @@ const App = () => {
             </header>
 
             {/* Content Scrollable Area */}
-            <main className="flex-1 overflow-auto p-4 lg:p-8 scroll-smooth">
+            <main className="flex-1 overflow-auto p-4 lg:p-8 scroll-smooth print:p-0">
               <div className="max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
