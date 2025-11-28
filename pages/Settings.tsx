@@ -59,9 +59,10 @@ const Settings = () => {
               <div className="flex items-center gap-6">
                  {/* Current Logo Display */}
                  <div className="flex flex-col items-center gap-2">
-                   <div className="h-24 w-24 rounded-full overflow-hidden shadow-md border border-slate-100 flex items-center justify-center bg-white">
-                      <img src="public/logo.png" alt="Company Logo" className="w-full h-full object-contain" />
-                   </div>
+                 <div className="h-24 w-24 rounded-full overflow-hidden shadow-md border border-slate-100 flex items-center justify-center bg-white">
+                    {/* CORRECTION ICI : Enlever 'public' */}
+                    <img src="/logo.png" alt="Company Logo" className="w-full h-full object-contain" />
+                 </div>  
                    <span className="text-[10px] text-slate-400 uppercase font-bold">Actuel</span>
                  </div>
 

@@ -211,7 +211,7 @@ const App = () => {
                <div className="flex items-center gap-4 relative z-10">
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1 shadow-lg shadow-indigo-500/20">
                   <img 
-                    src="public/logo.png" 
+                    src="/logo.png" 
                     alt="Fun Design" 
                     className="object-contain" 
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
