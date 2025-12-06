@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fun Design F&Z</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-bg-void: #fdfbf7;
+      --color-bg-surface: #ffffff;
+      --color-text-main: #0f172a;
+      --color-text-muted: #586578;
+      --color-border: #a3eaf1;
+      --color-primary: #8b5cf6;
+      --color-secondary: #06b6d4;
+
+      /* Glass Variables - Light Mode */
+      --glass-bg: rgba(236, 223, 223, 0.6);
+      --glass-border: rgba(139, 92, 246, 0.1);
+      /* Subtle gradient: Mint -> Sky -> Soft Violet */
+      --glass-card-bg: linear-gradient(135deg, rgba(203, 239, 247, 0.7) 0%, rgba(239, 246, 255, 0.7) 50%, rgba(245, 243, 255, 0.7) 100%);
+      --glass-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.05);
+    }
+
+    .dark {
+      --color-bg-void: #0B0C15;
+      --color-bg-surface: #151725;
+      --color-text-main: #ffffff;
+      --color-text-muted: #94a3b8;
+      --color-border: rgba(255, 255, 255, 0.1);
+
+      /* Glass Variables - Dark Mode */
+      --glass-bg: rgba(21, 23, 37, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-card-bg: linear-gradient(145deg, rgba(30, 32, 45, 0.6) 0%, rgba(21, 23, 37, 0.4) 100%);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--color-bg-void);
+      color: var(--color-text-main);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Glassmorphism Utilities */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .glass-card {
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0B0C15;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2d3045;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5070;
+    }
+
+    @media print {
+      @page {
+        margin: 0.5cm;
+        size: auto;
+      }
+
+      /* Hide main app root */
+      #root {
+        display: none !important;
+      }
+
+      /* Ensure modal overlay and content are visible and reset */
+      #print-modal-overlay {
+        position: static !important;
+        display: block !important;
+        background: white !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        z-index: 9999 !important;
+      }
+
+      #print-modal-content {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        color: black !important;
+      }
+
+      /* Hide non-print elements */
+      .no-print {
+        display: none !important;
+      }
+
+      /* Ensure text is black */
+      body,
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      span,
+      div,
+      td,
+      th,
+      li {
+        color: black !important;
+        text-shadow: none !important;
+      }
+
+      /* Table styles */
+      table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+      }
+
+      /* Hide scrollbars */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Print only utility */
+      .print-only {
+        display: block !important;
+      }
+
+      .hidden:not(.print-only) {
+        display: none !important;
+      }
+    }
+
+    /* Hide print-only elements on screen */
+    .print-only {
+      display: none;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            void: 'var(--color-bg-void)',
+            surface: 'var(--color-bg-surface)',
+            primary: 'var(--color-primary)',
+            secondary: 'var(--color-secondary)',
+            'white-10': 'var(--color-border)',
+            'white-5': 'rgba(255, 255, 255, 0.05)',
+            // Overrides for existing classes to support theme switching
+            white: 'var(--color-text-main)',
+            slate: {
+              200: 'var(--color-text-muted)',
+              300: 'var(--color-text-muted)',
+              400: 'var(--color-text-muted)',
+              500: 'var(--color-text-muted)',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
