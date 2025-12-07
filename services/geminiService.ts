@@ -1,8 +1,19 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import Groq from "groq-sdk";
 import { SmartInsight } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_API_KEY });
+// Initialize lazily to prevent app crash if env is missing
+const getGroqClient = () => {
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+  if (!apiKey) {
+    console.warn("Missing VITE_GROQ_API_KEY in environment variables.");
+    return null; // Return null if key is missing
+  }
+  return new Groq({
+    apiKey: apiKey,
+    dangerouslyAllowBrowser: true
+  });
+};
 
 export const generateInsights = async (data: any): Promise<SmartInsight[]> => {
   const prompt = `
@@ -26,41 +37,60 @@ export const generateInsights = async (data: any): Promise<SmartInsight[]> => {
     IMPORTANT: Respond in FRENCH (Français).
     The description should be detailed (2-3 sentences).
 
-    Return the response as a JSON array of objects with the following schema:
+    Return ONLY raw JSON array. Do not wrap in markdown blocks. 
+    Schema:
     [{ "title": "string", "description": "string", "type": "WARNING" | "OPPORTUNITY" | "INFO", "metric": "string (optional)" }]
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              description: { type: Type.STRING },
-              type: { type: Type.STRING, enum: ["WARNING", "OPPORTUNITY", "INFO"] },
-              metric: { type: Type.STRING },
-            }
-          }
+    console.log("Preparing Groq Request...");
+    const groq = getGroqClient();
+
+    if (!groq) {
+      return [
+        {
+          title: "Configuration Requise",
+          description: "Clé API manquante. Ajoutez VITE_GROQ_API_KEY dans le fichier .env.local.",
+          type: "WARNING"
         }
-      }
+      ];
+    }
+
+    const completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "llama3-70b-8192", // Fast and powerful free model
+      temperature: 0.5,
     });
 
-    const text = response.text;
+    const text = completion.choices[0]?.message?.content || "";
     if (!text) return [];
-    return JSON.parse(text) as SmartInsight[];
+
+    // Clean up potential markdown
+    const jsonString = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // Safely parse the JSON response
+    try {
+      return JSON.parse(jsonString) as SmartInsight[];
+    } catch (parseError) {
+      console.error("Groq JSON Parsing Error:", parseError, "Raw text:", text);
+      return [{
+        title: "Erreur d'analyse",
+        description: "La réponse de l'IA n'était pas un JSON valide. Veuillez réessayer.",
+        type: "WARNING"
+      }];
+    }
 
   } catch (error) {
-    console.error("Gemini API Error:", error);
+    console.error("Groq API Error:", error);
     return [
       {
-        title: "Analysis Failed",
-        description: "Could not generate insights at this time.",
+        title: "Service indisponible",
+        description: "Une erreur technique est survenue avec l'IA. Vérifiez la console.",
         type: "WARNING"
       }
     ];
