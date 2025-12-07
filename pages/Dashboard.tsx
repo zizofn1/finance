@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight, ArrowDownRight, Sparkles, AlertTriangle, TrendingUp, Info, Activity, Wallet, User, Plus, MoveRight, X, ExternalLink } from 'lucide-react';
 import { dataService } from '../services/dataService';
-import { generateInsights } from '../services/geminiService';
+import { generateInsights } from '../services/aiService';
 import { SmartInsight } from '../types';
 import { Link } from 'react-router-dom';
 
@@ -130,7 +130,7 @@ const InsightModal = ({ insight, onClose }: { insight: SmartInsight, onClose: ()
               <div>
                 <p className="text-sm font-bold text-white mb-1">Conseil IA</p>
                 <p className="text-xs text-slate-400">
-                  Cette analyse est générée automatiquement par Gemini AI en fonction de vos données financières récentes.
+                  Cette analyse est générée automatiquement par l'IA en fonction de vos données financières récentes.
                 </p>
               </div>
             </div>
@@ -196,6 +196,7 @@ const Dashboard = () => {
     setLoadingInsights(true);
     const dataForAI = dataService.getCombinedDataForAI();
     const generated = await generateInsights(dataForAI);
+    console.log("📊 AI Insights Result:", generated);
     setInsights(generated);
     setLoadingInsights(false);
   };
